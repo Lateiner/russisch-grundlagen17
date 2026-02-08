@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Präpositionen (до, в, на, к, за)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --highlight: #e8f4fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: var(--highlight);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        /* Liste der Sätze */
+        .sentence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sentence-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Wichtig für Handy: Umbruch erlauben */
+            gap: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .sentence-item:hover {
+            border-color: var(--secondary-color);
+            background-color: #fafafa;
+        }
+
+        /* Hervorhebung der Endung */
+        .ending {
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Dropdown Styling */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            background-color: #fff;
+        }
+
+        /* Status Farben */
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        select.wrong {
+            border-color: var(--error-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Buttons Container */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        /* Mobile Anpassungen */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .sentence-item { 
+                font-size: 1.1em;
+                padding: 15px;
+                line-height: 2; /* Mehr Zeilenabstand für Lesbarkeit bei Umbruch */
+            }
+            select {
+                margin: 0 5px; /* Etwas Abstand im Fließtext */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Präpositionen: до, в, на, к, за</h2>
+    <p class="instruction">
+        Wählen Sie die richtige Präposition. <br>
+        <strong>Tipp:</strong> Achten Sie auf die Verbvorsilbe und die markierte Endung des Substantivs!
+    </p>
+
+    <div class="sentence-list">
+
+        <!-- Satz 1: до + Genitiv -->
+        <div class="sentence-item">
+            1. Я наконец-то дошёл
+            <select data-correct="до">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            парк<span class="ending">а</span>.
+        </div>
+
+        <!-- Satz 2: в + Akkusativ (Richtung) -->
+        <div class="sentence-item">
+            2. Мы быстро зашли
+            <select data-correct="в">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            магазин (Akk.).
+        </div>
+
+        <!-- Satz 3: к + Dativ (Person) -->
+        <div class="sentence-item">
+            3. По дороге домой я заехал
+            <select data-correct="к">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            бабушк<span class="ending">е</span>.
+        </div>
+
+        <!-- Satz 4: за + Instrumental (Zweck/Holen) -->
+        <div class="sentence-item">
+            4. Мама зашла в пекарню
+            <select data-correct="за">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            хлеб<span class="ending">ом</span>.
+        </div>
+
+        <!-- Satz 5: на + Akkusativ (Ort/Veranstaltung) -->
+        <div class="sentence-item">
+            5. Утром папа зашёл
+            <select data-correct="на">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            почт<span class="ending">у</span>.
+        </div>
+
+        <!-- Satz 6: до + Genitiv (Ziel/Grenze) -->
+        <div class="sentence-item">
+            6. Извините, как доехать
+            <select data-correct="до">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            центр<span class="ending">а</span>?
+        </div>
+
+        <!-- Satz 7: за + Instrumental (Holen) -->
+        <div class="sentence-item">
+            7. Мы заехали на заправку
+            <select data-correct="за">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            бензин<span class="ending">ом</span>.
+        </div>
+
+        <!-- Satz 8: к + Dativ (Person) -->
+        <div class="sentence-item">
+            8. Студент подошёл
+            <select data-correct="к">
+                <option value="">...</option>
+                <option value="до">до</option>
+                <option value="в">в</option>
+                <option value="на">на</option>
+                <option value="к">к</option>
+                <option value="за">за</option>
+            </select>
+            профессор<span class="ending">у</span>.
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkTask()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetTask()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveTask()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkTask() {
+        const selects = document.querySelectorAll('select');
+        
+        selects.forEach(select => {
+            const userAnswer = select.value;
+            const correctAnswer = select.getAttribute('data-correct');
+            
+            // Erst Reset der Klassen
+            select.classList.remove('correct', 'wrong');
+
+            if (userAnswer === "") {
+                return; // Keine Farbe bei leerem Feld
+            }
+
+            if (userAnswer === correctAnswer) {
+                select.classList.add('correct');
+            } else {
+                select.classList.add('wrong');
+            }
+        });
+    }
+
+    function resetTask() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = "";
+            select.classList.remove('correct', 'wrong');
+        });
+    }
+
+    function solveTask() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = select.getAttribute('data-correct');
+            select.classList.remove('wrong');
+            select.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>
