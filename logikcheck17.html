@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Semantik & Logik</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        /* Liste der Logik-Aufgaben */
+        .logic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .logic-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: row; /* Desktop: Nebeneinander */
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .logic-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .sentence-box {
+            flex: 2;
+            font-size: 1.1em;
+        }
+
+        .sentence-text {
+            font-weight: 500;
+        }
+
+        .explanation {
+            display: none; /* Erst unsichtbar */
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #ccc;
+        }
+
+        /* Wahr/Falsch Toggle Buttons */
+        .toggle-group {
+            flex: 1;
+            display: flex;
+            gap: 5px;
+            min-width: 200px;
+        }
+
+        /* Versteckte Radio Inputs */
+        .toggle-group input[type="radio"] {
+            display: none;
+        }
+
+        .toggle-label {
+            flex: 1;
+            padding: 12px 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            font-size: 0.95em;
+            user-select: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .label-true {
+            border-radius: 4px 0 0 4px;
+            color: #27ae60;
+        }
+
+        .label-false {
+            border-radius: 0 4px 4px 0;
+            color: #c0392b;
+        }
+
+        /* Hover Effekte */
+        .label-true:hover { background-color: #e8f8f5; }
+        .label-false:hover { background-color: #fdedec; }
+
+        /* Checked State (Benutzer klickt) */
+        input[value="true"]:checked + .label-true {
+            background-color: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        input[value="false"]:checked + .label-false {
+            background-color: #c0392b;
+            color: white;
+            border-color: #c0392b;
+        }
+
+        /* Feedback Styles (Nach Überprüfung) */
+        .logic-item.correct-answer {
+            border-left: 5px solid var(--success-color);
+            background-color: #f0fff4;
+        }
+        
+        .logic-item.wrong-answer {
+            border-left: 5px solid var(--error-color);
+            background-color: #fff5f5;
+        }
+
+        /* Buttons Container */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s, transform 0.1s;
+        }
+        button:active { transform: scale(0.98); }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        /* --- Media Queries für Responsivität --- */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            .logic-item {
+                flex-direction: column; /* Handy: Untereinander */
+                align-items: stretch; /* Volle Breite */
+                padding: 15px;
+            }
+
+            .sentence-box {
+                margin-bottom: 10px;
+            }
+
+            .toggle-group {
+                width: 100%;
+            }
+
+            .toggle-label {
+                padding: 15px; /* Größere Touch-Fläche */
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Semantik: Logisch oder Unlogisch?</h2>
+    <p class="instruction">
+        Lesen Sie die Sätze genau. Ist die Situation logisch möglich und grammatikalisch korrekt für das verwendete Verb?<br>
+        Wählen Sie <strong>Logisch</strong> (Wahr) oder <strong>Unlogisch</strong> (Falsch).
+    </p>
+
+    <div class="logic-list">
+
+        <!-- Satz 1: Das Beispiel aus der Aufgabe -->
+        <div class="logic-item" id="item-1">
+            <div class="sentence-box">
+                <div class="sentence-text">1. Я живу в Берлине. Вчера я пешком дошёл до Москвы за хлебом.</div>
+                <div class="explanation">Die Distanz Berlin-Moskau ist zu groß für "gestern zu Fuß gehen" (дошёл) nur für Brot.</div>
+            </div>
+            <div class="toggle-group">
+                <input type="radio" name="q1" id="q1_t" value="true">
+                <label class="toggle-label label-true" for="q1_t">Logisch</label>
+                
+                <input type="radio" name="q1" id="q1_f" value="false" data-correct="true">
+                <label class="toggle-label label-false" for="q1_f">Unlogisch</label>
+            </div>
+        </div>
+
+        <!-- Satz 2: Korrekte Verwendung -->
+        <div class="logic-item" id="item-2">
+            <div class="sentence-box">
+                <div class="sentence-text">2. По дороге с работы домой я зашёл в аптеку за лекарством.</div>
+                <div class="explanation">Das ist logisch: Ein kurzer Zwischenstopp (зашёл) auf dem Heimweg.</div>
+            </div>
+            <div class="toggle-group">
+                <input type="radio" name="q2" id="q2_t" value="true" data-correct="true">
+                <label class="toggle-label label-true" for="q2_t">Logisch</label>
+                
+                <input type="radio" name="q2" id="q2_f" value="false">
+                <label class="toggle-label label-false" for="q2_f">Unlogisch</label>
+            </div>
+        </div>
+
+        <!-- Satz 3: Falsches Verb für Fahrzeug -->
+        <div class="logic-item" id="item-3">
+            <div class="sentence-box">
+                <div class="sentence-text">3. Моя машина зашла в гараж.</div>
+                <div class="explanation">Unlogisch: Autos können nicht "gehen" (зашла). Richtig wäre "заехала".</div>
+            </div>
+            <div class="toggle-group">
+                <input type="radio" name="q3" id="q3_t" value="true">
+                <label class="toggle-label label-true" for="q3_t">Logisch</label>
+                
+                <input type="radio" name="q3" id="q3_f" value="false" data-correct="true">
+                <label class="toggle-label label-false" for="q3_f">Unlogisch</label>
+            </div>
+        </div>
+
+        <!-- Satz 4: Korrekte Verwendung Fahrzeug -->
+        <div class="logic-item" id="item-4">
+            <div class="sentence-box">
+                <div class="sentence-text">4. Мы доехали до аэропорта на такси за 40 минут.</div>
+                <div class="explanation">Logisch: Ziel erreichen (до-) mit Fahrzeug (taxi/доехали) in einer realistischen Zeit.</div>
+            </div>
+            <div class="toggle-group">
+                <input type="radio" name="q4" id="q4_t" value="true" data-correct="true">
+                <label class="toggle-label label-true" for="q4_t">Logisch</label>
+                
+                <input type="radio" name="q4" id="q4_f" value="false">
+                <label class="toggle-label label-false" for="q4_f">Unlogisch</label>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkLogic()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetLogic()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveLogic()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkLogic() {
+        const items = document.querySelectorAll('.logic-item');
+        
+        items.forEach(item => {
+            // Finde den ausgewählten Radio-Button in diesem Item
+            const selected = item.querySelector('input[type="radio"]:checked');
+            const explanation = item.querySelector('.explanation');
+            
+            // Styles zurücksetzen
+            item.classList.remove('correct-answer', 'wrong-answer');
+            explanation.style.display = 'none';
+
+            if (selected) {
+                // Prüfen, ob das "data-correct" Attribut existiert
+                const isCorrect = selected.hasAttribute('data-correct');
+                
+                if (isCorrect) {
+                    item.classList.add('correct-answer');
+                } else {
+                    item.classList.add('wrong-answer');
+                    // Erklärung anzeigen, wenn falsch geantwortet wurde
+                    explanation.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    function resetLogic() {
+        const items = document.querySelectorAll('.logic-item');
+        items.forEach(item => {
+            item.classList.remove('correct-answer', 'wrong-answer');
+            item.querySelector('.explanation').style.display = 'none';
+            const radios = item.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => r.checked = false);
+        });
+    }
+
+    function solveLogic() {
+        resetLogic(); // Erst säubern
+        
+        const items = document.querySelectorAll('.logic-item');
+        items.forEach(item => {
+            // Den korrekten Radio-Button finden und auswählen
+            const correctRadio = item.querySelector('input[data-correct="true"]');
+            if (correctRadio) {
+                correctRadio.checked = true;
+                // Visuelles Feedback
+                item.classList.add('correct-answer');
+                // Erklärung anzeigen, damit man lernt, warum
+                item.querySelector('.explanation').style.display = 'block';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
