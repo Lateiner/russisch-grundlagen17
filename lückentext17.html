@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Zu Fuß oder mit Fahrzeug? (8 Sätze)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --highlight: #fff3cd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .signal-word {
+            background-color: var(--highlight);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            border-bottom: 2px solid #ffeeba;
+            cursor: help;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            margin-right: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sentence-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            transition: all 0.2s;
+        }
+
+        .sentence-item:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .sentence-text {
+            flex: 1;
+            line-height: 1.8;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #f8f9fa;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            padding: 6px 30px 6px 10px;
+            font-size: 1rem;
+            color: #495057;
+            cursor: pointer;
+            margin: 0 5px;
+            font-family: inherit;
+            font-weight: 600;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 10px auto;
+            min-width: 130px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        select.wrong {
+            border-color: var(--error-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .sentence-item { padding: 15px; }
+            .sentence-text { line-height: 2.4; }
+            select { width: 100%; margin: 8px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Zu Fuß oder mit Fahrzeug? (8 Sätze)</h2>
+    <p class="instruction">
+        Ergänzen Sie den Satz. Achten Sie auf die markierten <strong>Signalwörter</strong>!<br>
+        Wählen Sie zwischen <em>дошёл/дошли</em> (zu Fuß) und <em>доехал/доехали</em> (gefahren).
+    </p>
+
+    <div class="task-list">
+
+        <!-- Satz 1: Bus -->
+        <div class="sentence-item">
+            <span class="icon">🚌</span>
+            <span class="sentence-text">
+                Я сел <span class="signal-word">в автобус</span> и быстро 
+                <select id="q1" data-correct="доехал">
+                    <option value="">---</option>
+                    <option value="дошёл">дошёл</option>
+                    <option value="доехал">доехал</option>
+                </select>
+                до центра города.
+            </span>
+        </div>
+
+        <!-- Satz 2: Spazieren -->
+        <div class="sentence-item">
+            <span class="icon">🚶</span>
+            <span class="sentence-text">
+                Погода была хорошая, поэтому мы 
+                <select id="q2" data-correct="дошли">
+                    <option value="">---</option>
+                    <option value="дошли">дошли</option>
+                    <option value="доехали">доехали</option>
+                </select>
+                до парка <span class="signal-word">пешком</span>.
+            </span>
+        </div>
+
+        <!-- Satz 3: Auto -->
+        <div class="sentence-item">
+            <span class="icon">🚗</span>
+            <span class="sentence-text">
+                <span class="signal-word">На машине</span> мы 
+                <select id="q3" data-correct="доехали">
+                    <option value="">---</option>
+                    <option value="дошли">дошли</option>
+                    <option value="доехали">доехали</option>
+                </select>
+                до моря всего за 3 часа.
+            </span>
+        </div>
+
+        <!-- Satz 4: Langsam laufen -->
+        <div class="sentence-item">
+            <span class="icon">👵</span>
+            <span class="sentence-text">
+                Бабушка старая, но она сама 
+                <select id="q4" data-correct="дошла">
+                    <option value="">---</option>
+                    <option value="дошла">дошла</option>
+                    <option value="доехала">доехала</option>
+                </select>
+                до магазина <span class="signal-word">своими ногами</span>.
+            </span>
+        </div>
+
+        <!-- Satz 5: Taxi (Neuer Satz) -->
+        <div class="sentence-item">
+            <span class="icon">🚕</span>
+            <span class="sentence-text">
+                Мы опаздывали, поэтому вызвали <span class="signal-word">такси</span> и 
+                <select id="q5" data-correct="доехали">
+                    <option value="">---</option>
+                    <option value="дошли">дошли</option>
+                    <option value="доехали">доехали</option>
+                </select>
+                до вокзала вовремя.
+            </span>
+        </div>
+
+        <!-- Satz 6: Spazieren (Neuer Satz) -->
+        <div class="sentence-item">
+            <span class="icon">🌳</span>
+            <span class="sentence-text">
+                <span class="signal-word">Гуляя</span> по лесу, туристы случайно 
+                <select id="q6" data-correct="дошли">
+                    <option value="">---</option>
+                    <option value="дошли">дошли</option>
+                    <option value="доехали">доехали</option>
+                </select>
+                до старой деревни.
+            </span>
+        </div>
+
+        <!-- Satz 7: Fahrrad (Neuer Satz) -->
+        <div class="sentence-item">
+            <span class="icon">🚲</span>
+            <span class="sentence-text">
+                Спортсмен 
+                <select id="q7" data-correct="доехал">
+                    <option value="">---</option>
+                    <option value="дошёл">дошёл</option>
+                    <option value="доехал">доехал</option>
+                </select>
+                до финиша <span class="signal-word">на велосипеде</span> первым.
+            </span>
+        </div>
+
+        <!-- Satz 8: Auto kaputt -> zu Fuß (Neuer Satz) -->
+        <div class="sentence-item">
+            <span class="icon">⚠️</span>
+            <span class="sentence-text">
+                Наш автомобиль сломался, и нам пришлось 
+                <select id="q8" data-correct="дойти">
+                    <option value="">---</option>
+                    <option value="дойти">дойти</option>
+                    <option value="доехать">доехать</option>
+                </select>
+                до сервиса <span class="signal-word">пешком</span>.
+            </span>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkTask()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetTask()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveTask()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkTask() {
+        const selects = document.querySelectorAll('select');
+        
+        selects.forEach(select => {
+            const userAnswer = select.value;
+            const correctAnswer = select.getAttribute('data-correct');
+            
+            // Erst Reset
+            select.classList.remove('correct', 'wrong');
+
+            if (userAnswer === "") {
+                return; // Keine Farbe, wenn leer
+            }
+
+            if (userAnswer === correctAnswer) {
+                select.classList.add('correct');
+            } else {
+                select.classList.add('wrong');
+            }
+        });
+    }
+
+    function resetTask() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = "";
+            select.classList.remove('correct', 'wrong');
+        });
+    }
+
+    function solveTask() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = select.getAttribute('data-correct');
+            select.classList.remove('wrong');
+            select.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>
