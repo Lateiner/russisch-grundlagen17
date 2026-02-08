@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Verben der Fortbewegung: до- und за-</title>
+    <!-- Polyfill für Touch-Geräte (Drag & Drop) -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        /* Theorie-Box */
+        .theory-box {
+            background-color: #e8f4fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 4px;
+        }
+
+        .theory-box h3 {
+            margin-top: 0;
+        }
+
+        .example {
+            font-style: normal; /* Keine Kursivschrift */
+            background: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        /* Übungs-Container */
+        .exercise {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #fff;
+        }
+
+        .exercise h3 {
+            margin-top: 0;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 1.1em;
+        }
+
+        .instruction {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        /* Inputs und Elemente */
+        input[type="text"], select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            margin: 5px;
+        }
+
+        input.correct, select.correct, .drop-zone.correct {
+            border-color: var(--success-color);
+            background-color: #e8f8f5;
+            color: var(--success-color);
+        }
+
+        input.wrong, select.wrong, .drop-zone.wrong {
+            border-color: var(--error-color);
+            background-color: #fdedec;
+        }
+
+        /* Buttons */
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-check {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-solve:hover { background-color: #d35400; }
+
+        /* Drag & Drop Styles */
+        .draggable-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .draggable {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drop-zone {
+            border: 2px dashed #bdc3c7;
+            min-height: 40px;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #fafafa;
+            border-radius: 4px;
+            display: inline-block;
+            min-width: 150px;
+            vertical-align: middle;
+        }
+
+        /* Multiple Choice Radio Custom */
+        .mc-option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+        }
+        .mc-option:hover {
+            background-color: #f9f9f9;
+        }
+        .mc-option.correct-mark {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .mc-option.wrong-mark {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        /* Sortieraufgabe */
+        .sort-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            min-height: 50px;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .controls { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Verben der Fortbewegung</h1>
+    
+    <!-- Theorie Teil -->
+    <div class="theory-box">
+        <h2>Einführung: ЗАХОДИТЬ/ЗАЕЗЖАТЬ und ДОХОДИТЬ/ДОЕЗЖАТЬ</h2>
+        
+        <p>In dieser Lektion lernen wir den Unterschied zwischen den Präfixen <strong>до-</strong> und <strong>за-</strong> bei Bewegungsverben.</p>
+
+        <h3>1. Das Präfix ДО- (Erreichen eines Ziels)</h3>
+        <p>Bedeutung: Man bewegt sich bis zu einem bestimmten Punkt (Ziel) und erreicht ihn.</p>
+        <ul>
+            <li><strong>доходить / дойти</strong> (zu Fuß)</li>
+            <li><strong>доезжать / доехать</strong> (mit Fahrzeug)</li>
+        </ul>
+        <p>Grammatik: Immer mit der Präposition <strong>до + Genitiv</strong>.</p>
+        <p><span class="example">Я дохожу до парка.</span> (Ich gehe bis zum Park.)</p>
+
+        <h3>2. Das Präfix ЗА- (Kurzer Besuch / Zwischenstopp)</h3>
+        <p>Bedeutung: Man macht einen kleinen Abstecher auf dem Weg wohin, schaut kurz vorbei oder geht hinein.</p>
+        <ul>
+            <li><strong>заходить / зайти</strong> (zu Fuß)</li>
+            <li><strong>заезжать / заехать</strong> (mit Fahrzeug)</li>
+        </ul>
+        <p>Grammatik:</p>
+        <ul>
+            <li>Wohin (Gebäude/Ort): <strong>в / на + Akkusativ</strong> (<span class="example">зайти в магазин</span> - in den Laden gehen)</li>
+            <li>Zu wem (Person): <strong>к + Dativ</strong> (<span class="example">зайти к другу</span> - den Freund besuchen)</li>
+            <li>Wozu (Zweck): <strong>за + Instrumental</strong> (<span class="example">зайти за хлебом</span> - Brot holen)</li>
+        </ul>
+    </div>
+
+    <!-- Aufgabe 1: Multiple Choice -->
+    <section class="exercise" id="ex1">
+        <h3>1. Zu Fuß oder mit Fahrzeug?</h3>
+        <p class="instruction">Wählen Sie das passende Verb basierend auf dem Kontext (Bus/Auto vs. zu Fuß).</p>
+        
+        <div class="task-item">
+            <p>1. Я гуляю пешком и ... до парка.</p>
+            <label class="mc-option"><input type="radio" name="ex1_1" value="wrong"> доезжаю</label>
+            <label class="mc-option"><input type="radio" name="ex1_1" value="correct"> дохожу</label>
+        </div>
+        
+        <div class="task-item">
+            <p>2. Мы едем на машине и ... к бабушке.</p>
+            <label class="mc-option"><input type="radio" name="ex1_2" value="correct"> заезжаем</label>
+            <label class="mc-option"><input type="radio" name="ex1_2" value="wrong"> заходим</label>
+        </div>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkEx1()">Überprüfen</button>
+            <button class="btn-reset" onclick="resetEx1()">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveEx1()">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 2: Präpositionen -->
+    <section class="exercise" id="ex2">
+        <h3>2. Die richtige Präposition (до, в, к)</h3>
+        <p class="instruction">Ergänzen Sie die passende Präposition.</p>
+        <p>1. Я хочу дойти <input type="text" data-ans="до" size="4"> метро.</p>
+        <p>2. Анна зашла <input type="text" data-ans="в" size="4"> магазин.</p>
+        <p>3. Мы заехали <input type="text" data-ans="к" size="4"> Антону.</p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputEx('ex2')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputEx('ex2')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputEx('ex2')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 3: Drag & Drop Kategorisierung -->
+    <section class="exercise" id="ex3">
+        <h3>3. Ziel oder Zwischenstopp?</h3>
+        <p class="instruction">Ziehen Sie die Sätze in die richtige Kategorie.</p>
+        
+        <div class="draggable-container">
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag1">Я дошёл до финиша.</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag2">Он зашёл в аптеку.</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag3">Мы заехали за водой.</div>
+            <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag4">Она доехала до Берлина.</div>
+        </div>
+
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px;">
+                <h4>Präfix ДО- (Ziel erreicht)</h4>
+                <div class="drop-zone" id="zone-do" ondrop="drop(event, 'do')" ondragover="allowDrop(event)" style="min-height:100px; background:#e8f4fd;"></div>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <h4>Präfix ЗА- (Kurzer Besuch)</h4>
+                <div class="drop-zone" id="zone-za" ondrop="drop(event, 'za')" ondragover="allowDrop(event)" style="min-height:100px; background:#fff8e1;"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkEx3()">Überprüfen</button>
+            <button class="btn-reset" onclick="resetEx3()">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveEx3()">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 4: Konjugation -->
+    <section class="exercise" id="ex4">
+        <h3>4. Konjugation im Präsens</h3>
+        <p class="instruction">Setzen Sie das Verb in der richtigen Form ein.</p>
+        <p>1. (доходить) Ты часто <input type="text" data-ans="доходишь"> до работы пешком?</p>
+        <p>2. (заезжать) Мы обычно <input type="text" data-ans="заезжаем"> в супермаркет по пятницам.</p>
+        <p>3. (заходить) Он никогда не <input type="text" data-ans="заходит"> к нам в гости.</p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputEx('ex4')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputEx('ex4')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputEx('ex4')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 5: Dropdown Auswahl -->
+    <section class="exercise" id="ex5">
+        <h3>5. Wozu? (Der Zweck)</h3>
+        <p class="instruction">Wählen Sie die richtige Endung (Instrumental) für den Zweck des Besuchs.</p>
+        <p>
+            Мама зашла в пекарню за 
+            <select id="ex5_1" data-ans="хлебом">
+                <option value="">...</option>
+                <option value="хлеб">хлеб</option>
+                <option value="хлеба">хлеба</option>
+                <option value="хлебом">хлебом</option>
+            </select>.
+        </p>
+        <p>
+            Студент зашёл в библиотеку за 
+            <select id="ex5_2" data-ans="книгами">
+                <option value="">...</option>
+                <option value="книги">книги</option>
+                <option value="книг">книг</option>
+                <option value="книгами">книгами</option>
+            </select>.
+        </p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkSelectEx('ex5')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetSelectEx('ex5')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveSelectEx('ex5')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 6: Aspekt (Prozess vs. Resultat) -->
+    <section class="exercise" id="ex6">
+        <h3>6. Prozess oder Resultat?</h3>
+        <p class="instruction">Entscheiden Sie: доходить (UV - Prozess) oder дойти (V - Resultat).</p>
+        <div class="task-item">
+            <p>1. Вчера я наконец-то ... до врача. (Resultat in der Vergangenheit)</p>
+            <label class="mc-option"><input type="radio" name="ex6_1" value="wrong"> доходил</label>
+            <label class="mc-option"><input type="radio" name="ex6_1" value="correct"> дошёл</label>
+        </div>
+        <div class="task-item">
+            <p>2. Обычно я ... до школы за 10 минут. (Wiederholte Handlung/Prozess)</p>
+            <label class="mc-option"><input type="radio" name="ex6_2" value="correct"> дохожу</label>
+            <label class="mc-option"><input type="radio" name="ex6_2" value="wrong"> дойду</label>
+        </div>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkEx6()">Überprüfen</button>
+            <button class="btn-reset" onclick="resetEx6()">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveEx6()">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 7: Lückentext Kasus -->
+    <section class="exercise" id="ex7">
+        <h3>7. Die richtige Endung</h3>
+        <p class="instruction">Setzen Sie das Wort in der Klammer in den richtigen Fall.</p>
+        <p>1. Туристы дошли до <input type="text" data-ans="музея"> (музей).</p>
+        <p>2. По дороге домой я зашёл к <input type="text" data-ans="другу"> (друг).</p>
+        <p>3. Машина доехала до <input type="text" data-ans="границы"> (граница).</p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputEx('ex7')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputEx('ex7')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputEx('ex7')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 8: Satzbau -->
+    <section class="exercise" id="ex8">
+        <h3>8. Satz ordnen</h3>
+        <p class="instruction">Bringen Sie die Wörter in die richtige Reihenfolge. (Klicken Sie auf die Wörter)</p>
+        
+        <div id="source-8" class="sort-container">
+            <span class="draggable clickable" onclick="moveWord(this, 'target-8', 'source-8')">до</span>
+            <span class="draggable clickable" onclick="moveWord(this, 'target-8', 'source-8')">мы</span>
+            <span class="draggable clickable" onclick="moveWord(this, 'target-8', 'source-8')">парка</span>
+            <span class="draggable clickable" onclick="moveWord(this, 'target-8', 'source-8')">дошли</span>
+            <span class="draggable clickable" onclick="moveWord(this, 'target-8', 'source-8')">быстро</span>
+        </div>
+        
+        <p>Antwort:</p>
+        <div id="target-8" class="sort-container" style="background:#f9f9f9;"></div>
+        <input type="hidden" id="ans-8" value="мы быстро дошли до парка"> <!-- Alternative order accepted in JS logic -->
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkEx8()">Überprüfen</button>
+            <button class="btn-reset" onclick="resetEx8()">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveEx8()">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 9: Richtig oder Falsch -->
+    <section class="exercise" id="ex9">
+        <h3>9. Logik-Check</h3>
+        <p class="instruction">Ist die Aussage logisch richtig? (Wahr/Falsch)</p>
+        <div class="task-item">
+            <p>1. "Я зашёл к банк." (Grammatik)</p>
+            <select id="ex9_1" data-ans="falsch">
+                <option value="">...</option>
+                <option value="wahr">Richtig</option>
+                <option value="falsch">Falsch</option>
+            </select>
+        </div>
+        <div class="task-item">
+            <p>2. "Мы доехали до дома." (Bedeutung: Wir haben das Ziel erreicht)</p>
+            <select id="ex9_2" data-ans="wahr">
+                <option value="">...</option>
+                <option value="wahr">Richtig</option>
+                <option value="falsch">Falsch</option>
+            </select>
+        </div>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkSelectEx('ex9')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetSelectEx('ex9')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveSelectEx('ex9')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 10: Präfix wählen -->
+    <section class="exercise" id="ex10">
+        <h3>10. Welches Präfix: ДО- oder ЗА-?</h3>
+        <p class="instruction">Schreiben Sie nur das Präfix (до oder за).</p>
+        <p>1. Мне нужно <input type="text" data-ans="за" size="3">йти в магазин за молоком.</p>
+        <p>2. Как <input type="text" data-ans="до" size="3">ехать до вокзала?</p>
+        <p>3. Он <input type="text" data-ans="до" size="3">шёл до финиша первым.</p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputEx('ex10')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputEx('ex10')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputEx('ex10')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 11: Imperativ -->
+    <section class="exercise" id="ex11">
+        <h3>11. Imperativ (Befehlsform)</h3>
+        <p class="instruction">Bilden Sie den Imperativ.</p>
+        <p>1. (зайти) Пожалуйста, <input type="text" data-ans="зайди"> ко мне вечером!</p>
+        <p>2. (дойти) <input type="text" data-ans="дойдите"> до угла и поверните направо! (Höflichkeitsform)</p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkInputEx('ex11')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetInputEx('ex11')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveInputEx('ex11')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+    <!-- Aufgabe 12: Text ergänzen -->
+    <section class="exercise" id="ex12">
+        <h3>12. Mini-Geschichte</h3>
+        <p class="instruction">Wählen Sie die passenden Verben aus.</p>
+        <p>
+            Вчера я решил прогуляться. Я шёл долго и наконец 
+            <select id="ex12_1" data-ans="дошёл">
+                <option value="">...</option>
+                <option value="зашёл">зашёл</option>
+                <option value="дошёл">дошёл</option>
+            </select> 
+            до парка. По дороге я 
+            <select id="ex12_2" data-ans="зашёл">
+                <option value="">...</option>
+                <option value="зашёл">зашёл</option>
+                <option value="дошёл">дошёл</option>
+            </select> 
+            в кафе, чтобы купить кофе.
+        </p>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkSelectEx('ex12')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetSelectEx('ex12')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="solveSelectEx('ex12')">Lösung anzeigen</button>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    /* --- Hilfsfunktionen --- */
+    function markInput(element, isCorrect) {
+        element.classList.remove('correct', 'wrong');
+        if (isCorrect) {
+            element.classList.add('correct');
+        } else {
+            element.classList.add('wrong');
+        }
+    }
+
+    function cleanString(str) {
+        return str.trim().toLowerCase().replace(/[.,!?;]/g, '');
+    }
+
+    /* --- Generische Input-Checker (Für Aufgaben 2, 4, 7, 10, 11) --- */
+    function checkInputEx(exId) {
+        const container = document.getElementById(exId);
+        const inputs = container.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            const answer = input.getAttribute('data-ans').toLowerCase();
+            const value = input.value.trim().toLowerCase();
+            markInput(input, value === answer);
+        });
+    }
+
+    function resetInputEx(exId) {
+        const container = document.getElementById(exId);
+        const inputs = container.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            input.value = '';
+            input.classList.remove('correct', 'wrong');
+        });
+    }
+
+    function solveInputEx(exId) {
+        const container = document.getElementById(exId);
+        const inputs = container.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            input.value = input.getAttribute('data-ans');
+            input.classList.remove('correct', 'wrong');
+        });
+    }
+
+    /* --- Generische Select-Checker (Für Aufgaben 5, 9, 12) --- */
+    function checkSelectEx(exId) {
+        const container = document.getElementById(exId);
+        const selects = container.querySelectorAll('select');
+        selects.forEach(select => {
+            const answer = select.getAttribute('data-ans');
+            markInput(select, select.value === answer);
+        });
+    }
+
+    function resetSelectEx(exId) {
+        const container = document.getElementById(exId);
+        const selects = container.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = "";
+            select.classList.remove('correct', 'wrong');
+        });
+    }
+
+    function solveSelectEx(exId) {
+        const container = document.getElementById(exId);
+        const selects = container.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = select.getAttribute('data-ans');
+            select.classList.remove('correct', 'wrong');
+        });
+    }
+
+    /* --- Aufgabe 1: Multiple Choice (Radio) --- */
+    function checkEx1() {
+        const q1 = document.querySelector('input[name="ex1_1"]:checked');
+        const q2 = document.querySelector('input[name="ex1_2"]:checked');
+        
+        // Reset styles first
+        document.querySelectorAll('#ex1 .mc-option').forEach(el => el.classList.remove('correct-mark', 'wrong-mark'));
+
+        if(q1) {
+            if(q1.value === 'correct') q1.parentElement.classList.add('correct-mark');
+            else q1.parentElement.classList.add('wrong-mark');
+        }
+        if(q2) {
+            if(q2.value === 'correct') q2.parentElement.classList.add('correct-mark');
+            else q2.parentElement.classList.add('wrong-mark');
+        }
+    }
+
+    function resetEx1() {
+        document.querySelectorAll('input[name="ex1_1"], input[name="ex1_2"]').forEach(el => el.checked = false);
+        document.querySelectorAll('#ex1 .mc-option').forEach(el => el.classList.remove('correct-mark', 'wrong-mark'));
+    }
+
+    function solveEx1() {
+        resetEx1();
+        document.querySelector('input[name="ex1_1"][value="correct"]').checked = true;
+        document.querySelector('input[name="ex1_2"][value="correct"]').checked = true;
+        checkEx1(); // Um Farben anzuzeigen
+    }
+
+    /* --- Aufgabe 3: Drag & Drop --- */
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev, targetZone) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var node = document.getElementById(data);
+        if(ev.target.classList.contains('drop-zone')) {
+            ev.target.appendChild(node);
+        }
+    }
+
+    function checkEx3() {
+        // IDs: drag1 (до), drag2 (за), drag3 (за), drag4 (до)
+        const zoneDo = document.getElementById('zone-do');
+        const zoneZa = document.getElementById('zone-za');
+        
+        zoneDo.classList.remove('correct', 'wrong');
+        zoneZa.classList.remove('correct', 'wrong');
+
+        let doCorrect = (zoneDo.querySelector('#drag1') && zoneDo.querySelector('#drag4') && zoneDo.children.length === 2);
+        let zaCorrect = (zoneZa.querySelector('#drag2') && zoneZa.querySelector('#drag3') && zoneZa.children.length === 2);
+
+        if(doCorrect) zoneDo.classList.add('correct'); else zoneDo.classList.add('wrong');
+        if(zaCorrect) zoneZa.classList.add('correct'); else zoneZa.classList.add('wrong');
+    }
+
+    function resetEx3() {
+        const container = document.querySelector('#ex3 .draggable-container');
+        const items = ['drag1', 'drag2', 'drag3', 'drag4'];
+        items.forEach(id => {
+            const el = document.getElementById(id);
+            container.appendChild(el);
+        });
+        document.getElementById('zone-do').classList.remove('correct', 'wrong');
+        document.getElementById('zone-za').classList.remove('correct', 'wrong');
+    }
+
+    function solveEx3() {
+        const zoneDo = document.getElementById('zone-do');
+        const zoneZa = document.getElementById('zone-za');
+        zoneDo.appendChild(document.getElementById('drag1'));
+        zoneDo.appendChild(document.getElementById('drag4'));
+        zoneZa.appendChild(document.getElementById('drag2'));
+        zoneZa.appendChild(document.getElementById('drag3'));
+        checkEx3();
+    }
+
+    /* --- Aufgabe 6: Multiple Choice (Radio) --- */
+    function checkEx6() {
+        const q1 = document.querySelector('input[name="ex6_1"]:checked');
+        const q2 = document.querySelector('input[name="ex6_2"]:checked');
+        
+        document.querySelectorAll('#ex6 .mc-option').forEach(el => el.classList.remove('correct-mark', 'wrong-mark'));
+
+        if(q1) {
+            if(q1.value === 'correct') q1.parentElement.classList.add('correct-mark');
+            else q1.parentElement.classList.add('wrong-mark');
+        }
+        if(q2) {
+            if(q2.value === 'correct') q2.parentElement.classList.add('correct-mark');
+            else q2.parentElement.classList.add('wrong-mark');
+        }
+    }
+
+    function resetEx6() {
+        document.querySelectorAll('input[name="ex6_1"], input[name="ex6_2"]').forEach(el => el.checked = false);
+        document.querySelectorAll('#ex6 .mc-option').forEach(el => el.classList.remove('correct-mark', 'wrong-mark'));
+    }
+
+    function solveEx6() {
+        resetEx6();
+        document.querySelector('input[name="ex6_1"][value="correct"]').checked = true;
+        document.querySelector('input[name="ex6_2"][value="correct"]').checked = true;
+        checkEx6();
+    }
+
+    /* --- Aufgabe 8: Sortieren (Click to move) --- */
+    function moveWord(el, targetId, sourceId) {
+        const target = document.getElementById(targetId);
+        const source = document.getElementById(sourceId);
+        
+        if (el.parentElement.id === sourceId) {
+            target.appendChild(el);
+        } else {
+            source.appendChild(el);
+        }
+    }
+
+    function checkEx8() {
+        const target = document.getElementById('target-8');
+        const words = Array.from(target.children).map(span => span.innerText.toLowerCase());
+        const sentence = words.join(' ');
+        
+        // Mögliche korrekte Varianten (Russisch hat flexible Wortstellung, aber wir erwarten Standard)
+        const variant1 = "мы быстро дошли до парка";
+        const variant2 = "мы дошли до парка быстро";
+
+        target.style.border = "2px solid #ccc";
+        if(sentence === variant1 || sentence === variant2) {
+            target.style.borderColor = "var(--success-color)";
+            target.style.backgroundColor = "#e8f8f5";
+        } else {
+            target.style.borderColor = "var(--error-color)";
+            target.style.backgroundColor = "#fdedec";
+        }
+    }
+
+    function resetEx8() {
+        const source = document.getElementById('source-8');
+        const target = document.getElementById('target-8');
+        // Alles zurück in source
+        while(target.children.length > 0) {
+            source.appendChild(target.children[0]);
+        }
+        // Shuffle source (optional, aber einfach append reicht)
+        target.style.borderColor = "#ddd";
+        target.style.backgroundColor = "#f9f9f9";
+    }
+
+    function solveEx8() {
+        resetEx8();
+        const source = document.getElementById('source-8');
+        const target = document.getElementById('target-8');
+        // Wörter in der richtigen Reihenfolge suchen und verschieben
+        const order = ["мы", "быстро", "дошли", "до", "парка"];
+        
+        order.forEach(wordText => {
+            let found = Array.from(source.children).find(el => el.innerText.toLowerCase() === wordText);
+            if(found) target.appendChild(found);
+        });
+        checkEx8();
+    }
+
+</script>
+
+</body>
+</html>
