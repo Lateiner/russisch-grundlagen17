@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Der Grund des Besuchs (Instrumental)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --highlight: #e8f4fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: var(--highlight);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        /* Aufgaben-Liste */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .task-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-color: #bdc3c7;
+        }
+
+        /* Satz und Icon */
+        .sentence-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 1.25em;
+            font-weight: 500;
+        }
+
+        .icon-box {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        /* Antwort-Optionen */
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap; /* Wichtig für Responsivität */
+            gap: 10px;
+        }
+
+        /* Versteckte Radio Inputs */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Button Styling für Labels */
+        .option-btn {
+            flex: 1; /* Nimmt verfügbaren Platz ein */
+            min-width: 140px; /* Mindestbreite bevor Umbruch */
+            padding: 12px 10px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .option-btn:hover {
+            background-color: #e2e6ea;
+            border-color: #adb5bd;
+            transform: translateY(-2px);
+        }
+
+        /* Selected State (während der Auswahl) */
+        input[type="radio"]:checked + .option-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Feedback Farben (nach Prüfung) */
+        .option-btn.correct-mark {
+            background-color: var(--success-color) !important;
+            border-color: var(--success-color) !important;
+            color: white !important;
+            transform: none;
+        }
+
+        .option-btn.wrong-mark {
+            background-color: var(--error-color) !important;
+            border-color: var(--error-color) !important;
+            color: white !important;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        /* Mobile Optimierung */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .sentence-container { font-size: 1.1em; flex-direction: column; align-items: flex-start; }
+            .icon-box { margin-bottom: 5px; }
+            .option-btn { width: 100%; min-width: 100%; } /* Volle Breite auf Handy */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Der Grund des Besuchs</h2>
+    <p class="instruction">
+        Wählen Sie die richtige Form.<br>
+        <strong>Regel:</strong> за + Instrumental (Wozu? Um was zu holen?)
+    </p>
+
+    <div class="task-list">
+
+        <!-- Frage 1: Brot -->
+        <div class="task-item">
+            <div class="sentence-container">
+                <div class="icon-box">🍞</div>
+                <div>Я зашёл в магазин за...</div>
+            </div>
+            <div class="options-grid">
+                <input type="radio" name="q1" id="q1_a" value="wrong">
+                <label class="option-btn" for="q1_a">хлеб</label>
+
+                <input type="radio" name="q1" id="q1_b" value="wrong">
+                <label class="option-btn" for="q1_b">хлеба</label>
+
+                <input type="radio" name="q1" id="q1_c" value="correct">
+                <label class="option-btn" for="q1_c">хлебом</label>
+            </div>
+        </div>
+
+        <!-- Frage 2: Wasser -->
+        <div class="task-item">
+            <div class="sentence-container">
+                <div class="icon-box">💧</div>
+                <div>Миша заехал в супермаркет за...</div>
+            </div>
+            <div class="options-grid">
+                <input type="radio" name="q2" id="q2_a" value="correct">
+                <label class="option-btn" for="q2_a">водой</label>
+
+                <input type="radio" name="q2" id="q2_b" value="wrong">
+                <label class="option-btn" for="q2_b">воду</label>
+
+                <input type="radio" name="q2" id="q2_c" value="wrong">
+                <label class="option-btn" for="q2_c">вода</label>
+            </div>
+        </div>
+
+        <!-- Frage 3: Milch -->
+        <div class="task-item">
+            <div class="sentence-container">
+                <div class="icon-box">🥛</div>
+                <div>Утром папа ходил за...</div>
+            </div>
+            <div class="options-grid">
+                <input type="radio" name="q3" id="q3_a" value="wrong">
+                <label class="option-btn" for="q3_a">молока</label>
+
+                <input type="radio" name="q3" id="q3_b" value="correct">
+                <label class="option-btn" for="q3_b">молоком</label>
+
+                <input type="radio" name="q3" id="q3_c" value="wrong">
+                <label class="option-btn" for="q3_c">молоко</label>
+            </div>
+        </div>
+
+        <!-- Frage 4: Dokumente -->
+        <div class="task-item">
+            <div class="sentence-container">
+                <div class="icon-box">📄</div>
+                <div>Секретарь зашла в офис за...</div>
+            </div>
+            <div class="options-grid">
+                <input type="radio" name="q4" id="q4_a" value="wrong">
+                <label class="option-btn" for="q4_a">документы</label>
+
+                <input type="radio" name="q4" id="q4_b" value="correct">
+                <label class="option-btn" for="q4_b">документами</label>
+
+                <input type="radio" name="q4" id="q4_c" value="wrong">
+                <label class="option-btn" for="q4_c">документов</label>
+            </div>
+        </div>
+
+        <!-- Frage 5: Bücher -->
+        <div class="task-item">
+            <div class="sentence-container">
+                <div class="icon-box">📚</div>
+                <div>Студент зашёл в библиотеку за...</div>
+            </div>
+            <div class="options-grid">
+                <input type="radio" name="q5" id="q5_a" value="correct">
+                <label class="option-btn" for="q5_a">книгами</label>
+
+                <input type="radio" name="q5" id="q5_b" value="wrong">
+                <label class="option-btn" for="q5_b">книги</label>
+
+                <input type="radio" name="q5" id="q5_c" value="wrong">
+                <label class="option-btn" for="q5_c">книг</label>
+            </div>
+        </div>
+
+        <!-- Frage 6: Salz -->
+        <div class="task-item">
+            <div class="sentence-container">
+                <div class="icon-box">🧂</div>
+                <div>Соседка зашла к нам за...</div>
+            </div>
+            <div class="options-grid">
+                <input type="radio" name="q6" id="q6_a" value="wrong">
+                <label class="option-btn" for="q6_a">соль</label>
+
+                <input type="radio" name="q6" id="q6_b" value="wrong">
+                <label class="option-btn" for="q6_b">соли</label>
+
+                <input type="radio" name="q6" id="q6_c" value="correct">
+                <label class="option-btn" for="q6_c">солью</label>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkTask()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetTask()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveTask()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkTask() {
+        // Erst aufräumen
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.remove('correct-mark', 'wrong-mark');
+        });
+
+        // Alle Fragengruppen durchgehen
+        const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
+        
+        questions.forEach(qName => {
+            const selectedRadio = document.querySelector(`input[name="${qName}"]:checked`);
+            
+            if (selectedRadio) {
+                const label = document.querySelector(`label[for="${selectedRadio.id}"]`);
+                
+                if (selectedRadio.value === 'correct') {
+                    label.classList.add('correct-mark');
+                } else {
+                    label.classList.add('wrong-mark');
+                }
+            }
+        });
+    }
+
+    function resetTask() {
+        // Inputs zurücksetzen
+        document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+        
+        // Styles zurücksetzen
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.remove('correct-mark', 'wrong-mark');
+        });
+    }
+
+    function solveTask() {
+        resetTask(); // Erst sauber machen
+        
+        // Alle richtigen Antworten finden und markieren
+        const correctRadios = document.querySelectorAll('input[value="correct"]');
+        correctRadios.forEach(radio => {
+            radio.checked = true;
+            const label = document.querySelector(`label[for="${radio.id}"]`);
+            label.classList.add('correct-mark');
+        });
+    }
+</script>
+
+</body>
+</html>
