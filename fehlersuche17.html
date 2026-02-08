@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Fehlersuche (8 Fehler)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --highlight: #e8f4fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 2.2; /* Erhöhter Zeilenabstand für Dropdowns */
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: var(--highlight);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        /* Text-Box Container */
+        .text-box {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            font-size: 1.15em;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        /* Dropdown Styling im Text */
+        select.error-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #fff0f0; /* Leicht rötlicher Hintergrund als Hinweis */
+            border: 2px dashed #c0392b;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.95em;
+            color: #c0392b;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 3px;
+            font-family: inherit;
+            transition: all 0.3s;
+            text-align: center;
+            /* Pfeil entfernen oder anpassen */
+            background-image: none; 
+        }
+
+        select.error-select:focus {
+            outline: none;
+            background-color: #fff;
+            border-style: solid;
+            border-color: var(--secondary-color);
+            color: #333;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Feedback Styles */
+        select.error-select.correct {
+            border: 2px solid var(--success-color);
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        select.error-select.wrong {
+            border: 2px solid var(--error-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Buttons Container */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .text-box { 
+                padding: 15px; 
+                font-size: 1.1em;
+                line-height: 2.5; 
+            }
+            select.error-select {
+                max-width: 100%;
+                display: inline-block;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Fehlersuche im Text</h2>
+    <p class="instruction">
+        Der Text enthält <strong>8 Fehler</strong>. Die fehlerhaften Wörter sind markiert.<br>
+        Klicken Sie auf den Fehler und wählen Sie die <strong>richtige Korrektur</strong> aus der Liste.
+    </p>
+
+    <div class="text-box">
+        <p>
+            Вчера у меня был очень насыщенный день. Утром я опоздал на автобус, поэтому шёл пешком. 
+            Я шёл 40 минут и наконец 
+            <!-- 1. Fehler: Präfix (Ergebnis Ziel) -->
+            <select class="error-select" data-correct="дошёл">
+                <option value="зашёл" selected>зашёл</option> <!-- Falsch (default) -->
+                <option value="дошёл">дошёл</option> <!-- Richtig -->
+                <option value="пошёл">пошёл</option>
+            </select>
+            до офиса. 
+        </p>
+        <p>
+            В обед я решил пойти в магазин 
+            <!-- 2. Fehler: Fall (Instrumental) -->
+            <select class="error-select" data-correct="за хлебом">
+                <option value="за хлеба" selected>за хлеба</option> <!-- Falsch -->
+                <option value="за хлеб">за хлеб</option>
+                <option value="за хлебом">за хлебом</option> <!-- Richtig -->
+            </select>.
+            Потом мне нужно было 
+            <!-- 3. Fehler: Präfix (Besuch Person) -->
+            <select class="error-select" data-correct="зайти">
+                <option value="дойти" selected>дойти</option> <!-- Falsch -->
+                <option value="зайти">зайти</option> <!-- Richtig -->
+                <option value="пойти">пойти</option>
+            </select>
+            к директору в кабинет, чтобы подписать документы.
+        </p>
+        <p>
+            Вечером мы с коллегой вызвали такси и 
+            <!-- 4. Fehler: Verb (Fahren vs Gehen) -->
+            <select class="error-select" data-correct="доехали">
+                <option value="дошли" selected>дошли</option> <!-- Falsch -->
+                <option value="доехали">доехали</option> <!-- Richtig -->
+                <option value="заехали">заехали</option>
+            </select>
+            до ресторана. Мы доехали до 
+            <!-- 5. Fehler: Fall (Genitiv nach до) -->
+            <select class="error-select" data-correct="ресторана">
+                <option value="ресторан" selected>ресторан</option> <!-- Falsch -->
+                <option value="ресторана">ресторана</option> <!-- Richtig -->
+                <option value="ресторану">ресторану</option>
+            </select>
+            очень быстро. 
+            Мы зашли туда 
+            <!-- 6. Fehler: Fall (Instrumental - Zweck) -->
+            <select class="error-select" data-correct="за ужином">
+                <option value="за ужин" selected>за ужин</option> <!-- Falsch -->
+                <option value="за ужина">за ужина</option>
+                <option value="за ужином">за ужином</option> <!-- Richtig -->
+            </select>.
+        </p>
+        <p>
+            После ресторана мы 
+            <!-- 7. Fehler: Präfix (Ziel mit Auto) -->
+            <select class="error-select" data-correct="доехали">
+                <option value="заехали" selected>заехали</option> <!-- Falsch -->
+                <option value="доехали">доехали</option> <!-- Richtig -->
+                <option value="приехали">приехали</option>
+            </select>
+            до метро на машине. 
+            По дороге домой я ещё зашёл в аптеку 
+            <!-- 8. Fehler: Fall (Instrumental) -->
+            <select class="error-select" data-correct="за лекарством">
+                <option value="за лекарства" selected>за лекарства</option> <!-- Falsch -->
+                <option value="за лекарство">за лекарство</option>
+                <option value="за лекарством">за лекарством</option> <!-- Richtig -->
+            </select>.
+        </p>
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkTask()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetTask()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveTask()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkTask() {
+        const selects = document.querySelectorAll('.error-select');
+        
+        selects.forEach(select => {
+            const userAnswer = select.value;
+            const correctAnswer = select.getAttribute('data-correct');
+            
+            // Klassen zurücksetzen
+            select.classList.remove('correct', 'wrong');
+
+            if (userAnswer === correctAnswer) {
+                select.classList.add('correct');
+            } else {
+                select.classList.add('wrong');
+            }
+        });
+    }
+
+    function resetTask() {
+        const selects = document.querySelectorAll('.error-select');
+        selects.forEach(select => {
+            // Wir setzen auf den ersten Index zurück (das ist im HTML immer die falsche Option "selected")
+            // Alternativ: Wir speichern den Originalwert. Hier ist index 0 immer der Fehler laut HTML-Struktur.
+            select.selectedIndex = 0; 
+            select.classList.remove('correct', 'wrong');
+        });
+    }
+
+    function solveTask() {
+        const selects = document.querySelectorAll('.error-select');
+        selects.forEach(select => {
+            select.value = select.getAttribute('data-correct');
+            select.classList.remove('wrong');
+            select.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>
