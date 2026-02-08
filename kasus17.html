@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Kasus-Drill (Multiple Choice)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --highlight: #e8f4fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: var(--highlight);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        /* Aufgaben-Liste */
+        .drill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Mehr Abstand zwischen den Aufgaben */
+        }
+
+        .drill-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            transition: border-color 0.2s;
+        }
+
+        .drill-item:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .sentence {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .hint {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-weight: normal;
+        }
+
+        /* Container für die 3 Optionen */
+        .options-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap; /* Umbruch auf Handy */
+        }
+
+        /* Versteckte Radio Inputs */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Label Styling (sieht aus wie ein Button) */
+        .option-label {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+            border-color: #bbb;
+        }
+
+        /* Wenn ausgewählt (Checked State) */
+        input[type="radio"]:checked + .option-label {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        /* Feedback Farben (werden per JS hinzugefügt) */
+        .option-label.correct-mark {
+            background-color: var(--success-color) !important;
+            border-color: var(--success-color) !important;
+            color: white !important;
+        }
+
+        .option-label.wrong-mark {
+            background-color: var(--error-color) !important;
+            border-color: var(--error-color) !important;
+            color: white !important;
+            opacity: 0.7;
+        }
+
+        /* Buttons Container */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        /* Media Queries für Mobile */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .option-label {
+                width: 100%; /* Volle Breite auf Handy */
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Kasus-Drill: Wählen Sie die richtige Form</h2>
+    <p class="instruction">
+        Ergänzen Sie den Satz mit dem Substantiv im richtigen Fall.<br>
+        Achten Sie auf die Präpositionen (до, к, за, в)!
+    </p>
+
+    <div class="drill-list">
+
+        <!-- 1. до + Genitiv -->
+        <div class="drill-item">
+            <div class="sentence">1. Туристы наконец-то дошли до... <span class="hint">(музей)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q1" id="q1_a" value="wrong">
+                <label class="option-label" for="q1_a">музей</label>
+
+                <input type="radio" name="q1" id="q1_b" value="wrong">
+                <label class="option-label" for="q1_b">музею</label>
+
+                <input type="radio" name="q1" id="q1_c" value="correct">
+                <label class="option-label" for="q1_c">музея</label>
+            </div>
+        </div>
+
+        <!-- 2. к + Dativ -->
+        <div class="drill-item">
+            <div class="sentence">2. По дороге домой мы заехали к... <span class="hint">(бабушка)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q2" id="q2_a" value="correct">
+                <label class="option-label" for="q2_a">бабушке</label>
+
+                <input type="radio" name="q2" id="q2_b" value="wrong">
+                <label class="option-label" for="q2_b">бабушки</label>
+
+                <input type="radio" name="q2" id="q2_c" value="wrong">
+                <label class="option-label" for="q2_c">бабушку</label>
+            </div>
+        </div>
+
+        <!-- 3. за + Instrumental (Zweck) -->
+        <div class="drill-item">
+            <div class="sentence">3. Я зашёл в магазин за... <span class="hint">(хлеб)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q3" id="q3_a" value="wrong">
+                <label class="option-label" for="q3_a">хлеба</label>
+
+                <input type="radio" name="q3" id="q3_b" value="correct">
+                <label class="option-label" for="q3_b">хлебом</label>
+
+                <input type="radio" name="q3" id="q3_c" value="wrong">
+                <label class="option-label" for="q3_c">хлеб</label>
+            </div>
+        </div>
+
+        <!-- 4. в + Akkusativ (Richtung) -->
+        <div class="drill-item">
+            <div class="sentence">4. Студенты зашли в... <span class="hint">(библиотека)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q4" id="q4_a" value="correct">
+                <label class="option-label" for="q4_a">библиотеку</label>
+
+                <input type="radio" name="q4" id="q4_b" value="wrong">
+                <label class="option-label" for="q4_b">библиотеки</label>
+
+                <input type="radio" name="q4" id="q4_c" value="wrong">
+                <label class="option-label" for="q4_c">библиотеке</label>
+            </div>
+        </div>
+
+        <!-- 5. до + Genitiv (Ort) -->
+        <div class="drill-item">
+            <div class="sentence">5. Как доехать до... <span class="hint">(вокзал)</span>?</div>
+            <div class="options-container">
+                <input type="radio" name="q5" id="q5_a" value="wrong">
+                <label class="option-label" for="q5_a">вокзал</label>
+
+                <input type="radio" name="q5" id="q5_b" value="correct">
+                <label class="option-label" for="q5_b">вокзала</label>
+
+                <input type="radio" name="q5" id="q5_c" value="wrong">
+                <label class="option-label" for="q5_c">вокзалу</label>
+            </div>
+        </div>
+
+        <!-- 6. к + Dativ (Person) -->
+        <div class="drill-item">
+            <div class="sentence">6. Вчера я заходил к... <span class="hint">(друг)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q6" id="q6_a" value="wrong">
+                <label class="option-label" for="q6_a">друга</label>
+
+                <input type="radio" name="q6" id="q6_b" value="correct">
+                <label class="option-label" for="q6_b">другу</label>
+
+                <input type="radio" name="q6" id="q6_c" value="wrong">
+                <label class="option-label" for="q6_c">другом</label>
+            </div>
+        </div>
+
+        <!-- 7. за + Instrumental (Zweck) -->
+        <div class="drill-item">
+            <div class="sentence">7. Мы заехали на заправку за... <span class="hint">(бензин)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q7" id="q7_a" value="correct">
+                <label class="option-label" for="q7_a">бензином</label>
+
+                <input type="radio" name="q7" id="q7_b" value="wrong">
+                <label class="option-label" for="q7_b">бензина</label>
+
+                <input type="radio" name="q7" id="q7_c" value="wrong">
+                <label class="option-label" for="q7_c">бензину</label>
+            </div>
+        </div>
+
+        <!-- 8. до + Genitiv (Grenze) -->
+        <div class="drill-item">
+            <div class="sentence">8. Мы гуляли и дошли до... <span class="hint">(парк)</span></div>
+            <div class="options-container">
+                <input type="radio" name="q8" id="q8_a" value="wrong">
+                <label class="option-label" for="q8_a">парк</label>
+
+                <input type="radio" name="q8" id="q8_b" value="wrong">
+                <label class="option-label" for="q8_b">парке</label>
+
+                <input type="radio" name="q8" id="q8_c" value="correct">
+                <label class="option-label" for="q8_c">парка</label>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkDrill()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetDrill()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveDrill()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkDrill() {
+        // Alle Labels zurücksetzen
+        document.querySelectorAll('.option-label').forEach(label => {
+            label.classList.remove('correct-mark', 'wrong-mark');
+        });
+
+        const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+        questions.forEach(qName => {
+            const selectedRadio = document.querySelector(`input[name="${qName}"]:checked`);
+            
+            if (selectedRadio) {
+                const label = document.querySelector(`label[for="${selectedRadio.id}"]`);
+                if (selectedRadio.value === 'correct') {
+                    label.classList.add('correct-mark');
+                } else {
+                    label.classList.add('wrong-mark');
+                }
+            }
+        });
+    }
+
+    function resetDrill() {
+        // Radio Buttons deselektieren
+        const radios = document.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => r.checked = false);
+
+        // Farben entfernen
+        document.querySelectorAll('.option-label').forEach(label => {
+            label.classList.remove('correct-mark', 'wrong-mark');
+        });
+    }
+
+    function solveDrill() {
+        resetDrill(); // Erst säubern
+        
+        // Alle korrekten Antworten finden und auswählen
+        const correctRadios = document.querySelectorAll('input[value="correct"]');
+        correctRadios.forEach(radio => {
+            radio.checked = true;
+            const label = document.querySelector(`label[for="${radio.id}"]`);
+            label.classList.add('correct-mark');
+        });
+    }
+</script>
+
+</body>
+</html>
