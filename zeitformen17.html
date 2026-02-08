@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabe: Aspekt (Prozess vs. Resultat) - 6 Beispiele</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+            --signal-bg: #fff3cd; /* Gelb für Signalwörter */
+            --signal-border: #ffeeba;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px; /* Etwas breiter für 3 Spalten auf großen Screens */
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555;
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        /* Grid für die Aufgaben-Karten */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Karte für ein Verb-Paar */
+        .verb-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Damit Inhalte gleichmäßig verteilt sind */
+        }
+
+        .verb-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .verb-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        /* Einzelner Satz */
+        .sentence {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            line-height: 2.2; /* Platz für Dropdowns */
+        }
+
+        .sentence:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Signalwörter */
+        .signal {
+            background-color: var(--signal-bg);
+            border-bottom: 2px solid var(--signal-border);
+            padding: 0 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: help;
+        }
+
+        /* Dropdown Styling */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #f8f9fa;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            padding: 6px 25px 6px 10px;
+            font-size: 1rem;
+            color: #495057;
+            cursor: pointer;
+            margin: 0 5px;
+            font-family: inherit;
+            font-weight: 600;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px top 50%;
+            background-size: 10px auto;
+            min-width: 120px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        /* Feedback Styles */
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        select.wrong {
+            border-color: var(--error-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Buttons Container */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); }
+        .btn-check:hover { background-color: #2980b9; }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-reset:hover { background-color: #7f8c8d; }
+
+        .btn-solve { background-color: var(--accent-color); }
+        .btn-solve:hover { background-color: #d35400; }
+
+        /* Media Queries */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .verb-card { padding: 15px; }
+            select { 
+                width: 100%; 
+                margin: 5px 0;
+                display: block; /* Auf Handy untereinander */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Zeitformen-Check: Prozess oder Resultat?</h2>
+    <p class="instruction">
+        Wählen Sie die richtige Aspektform.<br>
+        Achten Sie auf die <strong>gelb markierten Signalwörter</strong>!<br>
+        <small>NSV (Prozess/Wiederholung) vs. SV (Resultat/Einmalig)</small>
+    </p>
+
+    <div class="grid-container">
+
+        <!-- Paar 1: доходить / дойти -->
+        <div class="verb-card">
+            <div class="verb-title">1. доходить (NSV) / дойти (SV)</div>
+            
+            <div class="sentence">
+                <span class="signal">Каждый день</span> я
+                <select data-correct="дохожу">
+                    <option value="">...</option>
+                    <option value="дохожу">дохожу</option>
+                    <option value="дошёл">дошёл</option>
+                </select>
+                до работы пешком.
+            </div>
+
+            <div class="sentence">
+                Вчера я <span class="signal">наконец-то</span>
+                <select data-correct="дошёл">
+                    <option value="">...</option>
+                    <option value="дохожу">дохожу</option>
+                    <option value="дошёл">дошёл</option>
+                </select>
+                до врача.
+            </div>
+        </div>
+
+        <!-- Paar 2: заезжать / заехать -->
+        <div class="verb-card">
+            <div class="verb-title">2. заезжать (NSV) / заехать (SV)</div>
+            
+            <div class="sentence">
+                Мы <span class="signal">часто</span>
+                <select data-correct="заезжаем">
+                    <option value="">...</option>
+                    <option value="заезжаем">заезжаем</option>
+                    <option value="заехали">заехали</option>
+                </select>
+                к бабушке по выходным.
+            </div>
+
+            <div class="sentence">
+                По дороге на дачу мы <span class="signal">вдруг</span>
+                <select data-correct="заехали">
+                    <option value="">...</option>
+                    <option value="заезжаем">заезжаем</option>
+                    <option value="заехали">заехали</option>
+                </select>
+                в лес.
+            </div>
+        </div>
+
+        <!-- Paar 3: доезжать / доехать -->
+        <div class="verb-card">
+            <div class="verb-title">3. доезжать (NSV) / доехать (SV)</div>
+            
+            <div class="sentence">
+                Этот автобус <span class="signal">обычно</span>
+                <select data-correct="доезжает">
+                    <option value="">...</option>
+                    <option value="доезжает">доезжает</option>
+                    <option value="доехал">доехал</option>
+                </select>
+                до центра за 20 минут.
+            </div>
+
+            <div class="sentence">
+                Из-за аварии он <span class="signal">еле-еле</span>
+                <select data-correct="доехал">
+                    <option value="">...</option>
+                    <option value="доезжает">доезжает</option>
+                    <option value="доехал">доехал</option>
+                </select>
+                до дома.
+            </div>
+        </div>
+
+        <!-- Paar 4: заходить / зайти -->
+        <div class="verb-card">
+            <div class="verb-title">4. заходить (NSV) / зайти (SV)</div>
+            
+            <div class="sentence">
+                Ты <span class="signal">всегда</span>
+                <select data-correct="заходишь">
+                    <option value="">...</option>
+                    <option value="заходишь">заходишь</option>
+                    <option value="зайдёшь">зайдёшь</option>
+                </select>
+                в это кафе?
+            </div>
+
+            <div class="sentence">
+                Пожалуйста, <span class="signal">сегодня</span> обязательно
+                <select data-correct="зайди">
+                    <option value="">...</option>
+                    <option value="заходи">заходи</option>
+                    <option value="зайди">зайди</option>
+                </select>
+                в аптеку!
+            </div>
+        </div>
+
+        <!-- Paar 5: заходить / зайти (Vergangenheit) -->
+        <div class="verb-card">
+            <div class="verb-title">5. заходить (NSV) / зайти (SV)</div>
+            
+            <div class="sentence">
+                Раньше я <span class="signal">часто</span>
+                <select data-correct="заходил">
+                    <option value="">...</option>
+                    <option value="заходил">заходил</option>
+                    <option value="зашёл">зашёл</option>
+                </select>
+                к другу после школы.
+            </div>
+
+            <div class="sentence">
+                Вчера я <span class="signal">на минутку</span>
+                <select data-correct="зашёл">
+                    <option value="">...</option>
+                    <option value="заходил">заходил</option>
+                    <option value="зашёл">зашёл</option>
+                </select>
+                в магазин.
+            </div>
+        </div>
+
+        <!-- Paar 6: доезжать / доехать (Negation/Erfolg) -->
+        <div class="verb-card">
+            <div class="verb-title">6. доезжать (NSV) / доехать (SV)</div>
+            
+            <div class="sentence">
+                Зимой мы <span class="signal">никогда не</span>
+                <select data-correct="доезжаем">
+                    <option value="">...</option>
+                    <option value="доезжаем">доезжаем</option>
+                    <option value="доехали">доехали</option>
+                </select>
+                до дачи, там много снега.
+            </div>
+
+            <div class="sentence">
+                Слава богу, мы <span class="signal">успели</span>
+                <select data-correct="доехать">
+                    <option value="">...</option>
+                    <option value="доезжать">доезжать</option>
+                    <option value="доехать">доехать</option>
+                </select>
+                до вокзала вовремя.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkTask()">Überprüfen</button>
+        <button class="btn-reset" onclick="resetTask()">Zurücksetzen</button>
+        <button class="btn-solve" onclick="solveTask()">Lösung anzeigen</button>
+    </div>
+
+</div>
+
+<script>
+    function checkTask() {
+        const selects = document.querySelectorAll('select');
+        
+        selects.forEach(select => {
+            const userAnswer = select.value;
+            const correctAnswer = select.getAttribute('data-correct');
+            
+            select.classList.remove('correct', 'wrong');
+
+            if (userAnswer === "") {
+                return; 
+            }
+
+            if (userAnswer === correctAnswer) {
+                select.classList.add('correct');
+            } else {
+                select.classList.add('wrong');
+            }
+        });
+    }
+
+    function resetTask() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = "";
+            select.classList.remove('correct', 'wrong');
+        });
+    }
+
+    function solveTask() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = select.getAttribute('data-correct');
+            select.classList.remove('wrong');
+            select.classList.add('correct');
+        });
+    }
+</script>
+
+</body>
+</html>
